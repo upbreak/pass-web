@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity extends BaseEntity{
     @Id
     private String userId;
 
