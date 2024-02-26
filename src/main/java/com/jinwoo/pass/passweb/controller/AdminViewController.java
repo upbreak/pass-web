@@ -3,14 +3,16 @@ package com.jinwoo.pass.passweb.controller;
 import com.jinwoo.pass.passweb.dto.request.BulkPassRequest;
 import com.jinwoo.pass.passweb.service.BulkPassService;
 import com.jinwoo.pass.passweb.service.PackageService;
+import com.jinwoo.pass.passweb.service.StatisticsService;
 import com.jinwoo.pass.passweb.service.UserGroupMappingService;
+import com.jinwoo.pass.passweb.utils.LocalDateTimeUtils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,6 +22,19 @@ public class AdminViewController {
     private final BulkPassService bulkPassService;
     private final PackageService packageService;
     private final UserGroupMappingService userGroupMappingService;
+    private final StatisticsService statisticsService;
+
+    @GetMapping("/home")
+    public String home(
+            @RequestParam("to") String toString
+            , ModelMap map
+    ){
+        LocalDateTime to = LocalDateTimeUtils.parseDate(toString);
+
+        map.addAttribute("chartData", statisticsService.makeChartData(to));
+
+        return "admin/index";
+    }
 
     @GetMapping("/bulk-pass")
     public String registerBulkPass(ModelMap map) {
